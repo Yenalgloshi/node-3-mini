@@ -4,7 +4,13 @@ let id = 0;
 module.exports = {
   create: ( req, res ) => {
     const { text, time } = req.body;
+    // STEP 11a: Here we are adding new messages
+    //  to a users session
+    const {user} = req.session;
+
     messages.push({ id, text, time });
+    // STEP 11b: 
+    user.messages.push({ id, text, time });
     id++;
     res.status(200).send( messages );
   },
@@ -15,7 +21,9 @@ module.exports = {
 
   update: ( req, res ) => {
     const { text } = req.body;
-    const updateID = req.params.id;
+    // STEP 12a: Update method is modified to use id off the request query.
+    // req.params.id changed to req.query.id
+    const updateID = req.query.id;
     const messageIndex = messages.findIndex( message => message.id == updateID );
     let message = messages[ messageIndex ];
 
@@ -29,7 +37,9 @@ module.exports = {
   },
 
   delete: ( req, res ) => {
-    const deleteID = req.params.id;
+    // STEP 12b: Delete method is modified to use id off the request query.
+    // req.params.id changed to req.query.id
+    const deleteID = req.query.id;
     messageIndex = messages.findIndex( message => message.id == deleteID );
     messages.splice(messageIndex, 1);
     res.status(200).send( messages );
